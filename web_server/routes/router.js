@@ -2,7 +2,7 @@ var express = require('express');
 var passwordHash = require('password-hash');
 var session = require('client-sessions');
 var User = require('../model/user');
-var rpc_client = require('../rpc_client/rpc_client')
+var rpc_client = require('../rpc_client/rpc_client');
 var router = express.Router();
 
 TITLE = 'Smart Zillow';
@@ -10,7 +10,7 @@ TITLE = 'Smart Zillow';
 /* Index page */
 router.get('/', function(req, res, next) {
   var user = checkLoggedIn(req, res)
-  res.render('index', { title: TITLE, logged_in_user: user});
+  res.render('index', { title: TITLE, logged_in_user: user });
 });
 
 /* Search page */
@@ -27,7 +27,7 @@ router.get('/search', function(req, res, next) {
     }
 
     // Add thousands separators for numbers.
-    //addThousandSeparatorForSearchResult(results)
+    addThousandSeparatorForSearchResult(results)
 
     res.render('search_result', {
       title: TITLE,
@@ -35,6 +35,44 @@ router.get('/search', function(req, res, next) {
       results: results
     });
 
+  });
+});
+
+/* Property detail page*/
+router.get('/detail', function(req, res, next) {
+  logged_in_user = checkLoggedIn(req, res)
+
+  var id = req.query.id
+  console.log("detail for id: " + id)
+
+  rpc_client.getDetailsByZpid(id, function(response) {
+    property = {}
+    if (response === undefined || response === null) {
+      console.log("No results found");
+    } else {
+      property = response;
+    }
+
+    // Handle predicted value
+    var predicted_value = parseInt(property['predicted_value']);
+    var list_price = parseInt(property['list_price']);
+    property['predicted_change'] = ((predicted_value - list_price) / list_price * 100).toFixed(2);
+
+    // Add thousands separators for numbers.
+    addThousandSeparator(property);
+
+    // Split facts and additional facts
+    splitFacts(property, 'facts');
+    splitFacts(property, 'additional_facts');
+
+
+    res.render('detail', 
+      {
+        title: 'Smart Zillow',
+        query: '',
+        logged_in_user: logged_in_user,
+        property : property
+      });
   });
 });
 
@@ -122,6 +160,33 @@ function checkLoggedIn(req, res) {
     return req.session.user;
   }
   return null;
+}
+
+function splitFacts(property, field_name) {
+  facts_groups = [];
+  group_size = property[field_name].length / 3;
+  facts_groups.push(property[field_name].slice(0, group_size));
+  facts_groups.push(property[field_name].slice(group_size, group_size + group_size));
+  facts_groups.push(property[field_name].slice(group_size + group_size));
+  property[field_name] = facts_groups;
+}
+
+function addThousandSeparatorForSearchResult(searchResult) {
+  for (i = 0; i < searchResult.length; i++) {
+    addThousandSeparator(searchResult[i]);
+  }
+}
+
+function addThousandSeparator(property) {
+  property['list_price'] = numberWithCommas(property['list_price']);
+  property['size'] = numberWithCommas(property['size']);
+  property['predicted_value'] = numberWithCommas(property['predicted_value']);
+}
+
+function numberWithCommas(x) {
+  if (x != null) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 }
 
 module.exports = router;

@@ -1,15 +1,15 @@
-from cloudAMQP_client import CloudAMQP
+from cloudAMQP_client import CloudAMQPClient
 
-CLOUDAMQP_URL = 'amqp://qmvljrwj:1IDFZsc2wJSX74wZhjBOmSsfBMCb5g_E@wombat.rmq.cloudamqp.com/qmvljrwj'
-QUEUE_NAME = 'test_queue'
+# REPLACE URL WITH YOUR OWN
+CLOUDAMQP_URL = ''
+QUEUE_NAME = 'dataFetcherTaskQueue'
 
-#instantiate client
-client = CloudAMQP(CLOUDAMQP_URL, QUEUE_NAME)
+# Initialize a client
+client = CloudAMQPClient(CLOUDAMQP_URL, QUEUE_NAME)
 
-#Send a message
- 
-#client.sendDataFetcherTask({'name' : 'test message'})
+# Send a message
+client.sendDataFetcherTask({'zpid' : '83154148'})
 
-#Get a message
 
-client.getDataFetcherTask()
+# Receive a message
+#client.getDataFetcherTask()

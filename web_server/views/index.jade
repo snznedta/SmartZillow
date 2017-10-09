@@ -9,26 +9,16 @@ html
   body
     .navbar.navbar-fixed-top(role='navigation')
       .container-fluid
-        .col-md-8
-        .col-md-2
+        .nav.navbar-right
           if logged_in_user
-             form(method="get", action="/", id="index")
-              input(class="btn navbar-btn" value= logged_in_user type="submit" style="margin-right:120px; margin-top: 40px; font-size:110%; background-color: black; color: white;") 
-        .col-md-1
-          if logged_in_user
-            form(method="get", action="/logout", id="logout")
+            form(metdho="get", action="/logout", id="logout")
               input(class="btn navbar-btn" value="Log out" type="submit" style="margin-right:120px; margin-top: 40px; font-size:110%; background-color: #4285f4; color: white;")
-             
           else
-            form(method="get", action="/login", id="login")
+            form(metdho="get", action="/login", id="login")
               input(class="btn navbar-btn" value="Sign in" type="submit" style="margin-right:120px; margin-top: 40px; font-size:110%; background-color: #4285f4; color: white;")
-        .col-md-1
-            form(method="get", action="/register", id="register")
-              input(class="btn navbar-btn" value="Sign up" type="submit" style="margin-right:120px; margin-top: 40px; font-size:110%; background-color: #4285f4; color: white;")
 
     div(style="margin-top: 10%")
-      a(href = "/")
-        img(src="/logo.png", style="display: block; margin-left: auto; margin-right: auto ")
+      img(src="/logo.png", style="display: block; margin-left: auto; margin-right: auto ")
       br
       br
       br

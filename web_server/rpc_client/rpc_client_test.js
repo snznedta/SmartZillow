@@ -1,9 +1,31 @@
- var client = require('./rpc_client');
+var client = require('./rpc_client');
 
- client.add(1000, 2, function(response){
- 	console.log("1000  + 2 = " + response);
- });
+// invoke "add"
+client.add(1, 2, function(response) {
+    console.log("1 + 2 = " + response);
+});
 
- client.searchArea('15206', function(response) {
- 	console.log("15206:" + response); 
- });
+// invoke "searchArea"
+client.searchArea('94080', function(response) {
+    console.log('94080: ' + response);
+});
+
+// invoke "searchByAddress"
+client.searchByAddress('101 Mclellan', '94080', function(response) {
+	console.log(response);
+});
+
+// invoke "searchAreaByZip"
+client.searchAreaByZip('94080', function(response) {
+  	console.log(response);
+});
+
+// invoke "searchAreaByCityState"
+client.searchAreaByCityState('San Jose', 'CA', function(response) {
+  	console.log(response);
+});
+
+// invoke "getDetailsByZpid"
+client.getDetailsByZpid('2096899447', function(response) {
+    console.log(response);
+});

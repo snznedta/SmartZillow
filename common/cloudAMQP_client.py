@@ -1,7 +1,7 @@
-import pika
 import json
-class CloudAMQP:
-    """docstring for CloudAMQP"""
+import pika
+
+class CloudAMQPClient:
     def __init__(self, cloud_amqp_url, queue_name):
         self.cloud_amqp_url = cloud_amqp_url
         self.queue_name = queue_name
@@ -20,11 +20,11 @@ class CloudAMQP:
 
     # Receive a message
     def getDataFetcherTask(self):
-        method_frame, header_frame, body = self.channel.basic_get(self.queue_name) 
+        method_frame, header_frame, body = self.channel.basic_get(self.queue_name)
         if method_frame:
             print "[x] Received task from dataFetcherTaskQueue: %s" % body
             self.channel.basic_ack(method_frame.delivery_tag)
             return body
         else:
-            print "No message receive"
+            print "No message returnning"
             return None
